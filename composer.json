@@ -1,0 +1,28 @@
+{
+	"name": "tjm/web-crawler"
+	,"description": "Crawl websites, finding internal links and getting content."
+	,"authors": [
+		{
+			"name": "Toby Mackenzie"
+			,"email": "public@tobymackenzie.com"
+			,"homepage": "https://www.tobymackenzie.com"
+		}
+	]
+	,"license": "0BSD"
+	,"autoload": {
+		"psr-4": {
+			"TJM\\WebCrawler\\": "src"
+		}
+	}
+	,"autoload-dev": {
+		"psr-4": {
+			"TJM\\WebCrawler\\Tests\\": "tests"
+		}
+	}
+	,"require": {
+		"php": ">=7.4"
+	}
+	,"require-dev": {
+		"tjm/dev": "*"
+	}
+}

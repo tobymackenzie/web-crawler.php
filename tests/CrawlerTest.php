@@ -1,0 +1,48 @@
+<?php
+namespace TJM\WebCrawler\Tests;
+use TJM\WebCrawler\Crawler;
+use TJM\WebCrawler\Tests\Entities\ExpectArgs;
+use TJM\WebCrawler\Tests\Types\TestType;
+
+class CrawlerTest extends TestType{
+	public function testIsInternalPath(){
+		return $this->doReflectionTest(Crawler::class, 'isInternalPath', [
+			'/'=> true,
+			'/foo/bar'=> true,
+			'bar'=> true,
+			'bar?foo=asdf'=> true,
+			'foo/bar?foo=asdf'=> true,
+			'../foo/bar?foo=asdf'=> true,
+			'//example.com/asdf'=> true,
+			'http://example.com/foo?bar'=> true,
+			'http://macn.me/foo?bar'=> false,
+		], [['host'=> 'example.com']]);
+	}
+	public function testIsPathRelativePath(){
+		return $this->doReflectionTest(Crawler::class, 'isPathRelativePath', [
+			'/'=> false,
+			'/foo/bar'=> false,
+			'bar'=> true,
+			'bar?foo=asdf'=> true,
+			'foo/bar?foo=asdf'=> true,
+			'../bar?foo=asdf'=> true,
+			'//example.com/asdf'=> false,
+			'http://example.com/foo?bar'=> false,
+			'http://macn.me/foo?bar'=> false,
+		]);
+	}
+	public function testNormalizePaths(){
+		return $this->doReflectionTest(Crawler::class, 'normalizePath', [
+			''=> '/',
+			'/'=> '/',
+			'/foo.html'=> '/foo.html',
+			'/foo/bar'=> '/foo/bar',
+			'/foo/bar.html'=> '/foo/bar.html',
+			'/foo/bar?biz'=> '/foo/bar?biz',
+			'/dir/foo'=> new ExpectArgs(
+				['foo', 'dir'],
+				'/dir/foo'
+			),
+		]);
+	}
+}
