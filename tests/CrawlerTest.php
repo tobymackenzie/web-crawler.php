@@ -1,12 +1,12 @@
 <?php
 namespace TJM\WebCrawler\Tests;
+use TJM\Dev\Test\ExpectArgs;
+use TJM\Dev\Test\TestCase;
 use TJM\WebCrawler\Crawler;
-use TJM\WebCrawler\Tests\Entities\ExpectArgs;
-use TJM\WebCrawler\Tests\Types\TestType;
 
-class CrawlerTest extends TestType{
+class CrawlerTest extends TestCase{
 	public function testIsInternalPath(){
-		return $this->doReflectionTest(Crawler::class, 'isInternalPath', [
+		return $this->doReflectionMethodTest(Crawler::class, 'isInternalPath', [
 			'/'=> true,
 			'/foo/bar'=> true,
 			'bar'=> true,
@@ -19,7 +19,7 @@ class CrawlerTest extends TestType{
 		], [['host'=> 'example.com']]);
 	}
 	public function testIsPathRelativePath(){
-		return $this->doReflectionTest(Crawler::class, 'isPathRelativePath', [
+		return $this->doReflectionMethodTest(Crawler::class, 'isPathRelativePath', [
 			'/'=> false,
 			'/foo/bar'=> false,
 			'bar'=> true,
@@ -32,7 +32,7 @@ class CrawlerTest extends TestType{
 		]);
 	}
 	public function testNormalizePaths(){
-		return $this->doReflectionTest(Crawler::class, 'normalizePath', [
+		return $this->doReflectionMethodTest(Crawler::class, 'normalizePath', [
 			''=> '/',
 			'/'=> '/',
 			'/foo.html'=> '/foo.html',
