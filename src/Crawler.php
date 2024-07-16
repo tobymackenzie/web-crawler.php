@@ -1,13 +1,12 @@
 <?php
 namespace TJM\WebCrawler;
+use Closure;
 use DOMDocument;
 use Exception;
 
 class Crawler{
-	//--cli: cli path.  If set, will call cli path like `{$this->cli} {$path}`
-	protected ?string $cli = null;
-	//--client: client to make request with
-	protected ?ClientInterface $client = null;
+	//--client: client to make request with. instance of ClientInterface OR Closure OR string path to CLI. If null, will use HttpClient (curl).
+	protected $client = null;
 	//--delay: delay between requests.  By default, will add 1 second delay for HTTP requests, none for CLI.
 	protected ?int $delay = null;
 	//--delayUnit: seconds or microseconds
@@ -122,10 +121,14 @@ class Crawler{
 	//==http
 	protected function getClient(){
 		if(empty($this->client)){
-			if(!empty($this->cli)){
-				$this->client = new CliClient($this->cli);
+			$this->client = new HttpClient($this->host, $this->scheme);
+		}elseif(!($this->client instanceof ClientInterface)){
+			if($this->client instanceof Closure){
+				$this->client = new ClosureClient($this->client);
+			}elseif(is_string($this->client)){
+				$this->client = new CliClient($this->client);
 			}else{
-				$this->client = new HttpClient($this->host, $this->scheme);
+				throw new Exception("Invalid client type " . $this->client);
 			}
 		}
 		return $this->client;

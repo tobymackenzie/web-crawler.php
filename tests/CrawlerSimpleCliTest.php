@@ -4,7 +4,7 @@ use TJM\WebCrawler\Tests\Types\CrawlerTestType;
 
 class CrawlerSimpleCliTest extends CrawlerTestType{
 	protected array $crawlerOpts = [
-		'cli'=> 'php ' . __DIR__ . '/resources/www/index.php',
+		'client'=> 'php ' . __DIR__ . '/resources/www/index.php',
 	];
 	protected array $crawlPaths = ['/'];
 	protected array $expect = [
