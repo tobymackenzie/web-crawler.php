@@ -11,11 +11,14 @@ class CrawlerTestType extends TestCase{
 	protected int $expectCount = 0;
 	public function setUp(): void{
 		if(empty($this->crawler)){
-			$this->crawler = new Crawler($this->crawlerOpts);
+			$this->crawler = new Crawler($this->getCrawlerOpts());
 			if($this->crawlPaths){
 				$this->crawler->crawl($this->crawlPaths);
 			}
 		}
+	}
+	protected function getCrawlerOpts(): array{
+		return $this->crawlerOpts;
 	}
 	public function testExpectedVisitedCount(){
 		$this->assertEquals(count($this->expect), count($this->crawler->getVisitedPaths()));

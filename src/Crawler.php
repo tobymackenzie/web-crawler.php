@@ -4,8 +4,10 @@ use DOMDocument;
 use Exception;
 
 class Crawler{
-	//--cli: cli path.  If set, will call cli path like `{$path} {$entry} {$query}`
+	//--cli: cli path.  If set, will call cli path like `{$this->cli} {$path}`
 	protected ?string $cli = null;
+	//--client: client to make request with
+	protected ?ClientInterface $client = null;
 	//--delay: delay between requests.  By default, will add 1 second delay for HTTP requests, none for CLI.
 	protected ?int $delay = null;
 	//--delayUnit: seconds or microseconds
@@ -106,7 +108,7 @@ class Crawler{
 	protected function delay(){
 		//--delay http requests by a second by default to reduce server load and prevent
 		if($this->delay === null){
-			$this->delay = empty($this->cli) ? 1 : false;
+			$this->delay = $this->getClient() instanceof HttpClient ? 1 : false;
 		}
 		if($this->delay){
 			if($this->delayUnit === self::DELAY_SECONDS){
@@ -118,40 +120,19 @@ class Crawler{
 	}
 
 	//==http
+	protected function getClient(){
+		if(empty($this->client)){
+			if(!empty($this->cli)){
+				$this->client = new CliClient($this->cli);
+			}else{
+				$this->client = new HttpClient($this->host, $this->scheme);
+			}
+		}
+		return $this->client;
+	}
 	protected function makeRequest($path){
 		if(!isset($this->visited[$path]) && !$this->ignorePath($path)){
-			if($this->cli){
-				try{
-					$content = shell_exec($this->cli . ' ' . escapeshellarg($path));
-					if($content){
-						if(preg_match(':^HTTP/.+ ([\d]{3})[\w ]+\r\n(.+)\r\n\r\n(.+)$:s', $content, $matches)){
-							$code = (int) $matches[1];
-							$headers = $matches[2];
-							$content = $matches[3];
-						}elseif(stripos($content, '<!doctype') !== false){
-							$headers = ['Content-Type'=> 'text/html'];
-						}
-						$response = new Response($content, $code ?? 200, $headers ?? null);
-					}
-				}catch(Exception $e){}
-				if(empty($response)){
-					$response = new Response('', 404);
-				}
-			}else{
-				$url = $this->scheme . '://' . $this->host . $path;
-				$ch = curl_init($url);
-				curl_setopt_array($ch, [
-					CURLOPT_CONNECTTIMEOUT=> 0,
-					CURLOPT_HEADER=> true,
-					CURLOPT_RETURNTRANSFER=> true,
-					CURLOPT_USERAGENT=> 'TJMWebCrawlerBot',
-				]);
-				$response = curl_exec($ch);
-				$data = curl_getinfo($ch);
-				$headers = substr($response, 0, $data['header_size']);
-				$content = substr($response, $data['header_size']);
-				$response = new Response($content, $data['http_code'], $headers);
-			}
+			$response = $this->getClient()->request($path);
 		}else{
 			$response = false;
 		}
