@@ -13,6 +13,8 @@ class Crawler{
 	const DELAY_SECONDS = 0;
 	const DELAY_MICROSECONDS = 1;
 	protected int $delayUnit = self::DELAY_SECONDS;
+	//--follow: whether to add more links found in responses and follow them
+	protected bool $follow = true;
 	//--host: domain of set, needed to include absolute URLs in crawl, and to build paths for http crawls
 	protected ?string $host = null;
 	//--ignore: paths to ignore on both get and write. Can be string (with leading "/") for exact match, or a PathRegex / PathMatchInterface object to match against
@@ -38,14 +40,14 @@ class Crawler{
 	}
 
 	//==crawl
-	public function crawl(array $paths = null, bool $follow = true, $callback = null){
+	public function crawl(array $paths = null, array $opts = [], $callback = null){
 		if($paths){
 			foreach($paths as $path){
 				$this->crawlPath($path, $callback);
 				$this->delay();
 			}
 		}
-		if($follow){
+		if($opts['follow'] ?? $this->follow){
 			$this->crawlUnvisited($callback);
 		}
 	}
