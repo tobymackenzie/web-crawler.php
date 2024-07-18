@@ -31,11 +31,9 @@ class Crawler{
 	protected array $visited = [];
 
 
-	public function __construct(array $conf = null){
-		if($conf){
-			foreach($conf as $key=> $value){
-				$this->$key = $value;
-			}
+	public function __construct(array $opts){
+		foreach($opts as $key=> $value){
+			$this->$key = $value;
 		}
 	}
 
