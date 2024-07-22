@@ -40,7 +40,11 @@ class Response{
 				}
 			}
 		}
-		return $this->contentType;
+		$contentType = $this->contentType;
+		if(strpos($contentType, ';') !== false){
+			$contentType = explode(';', $contentType)[0];
+		}
+		return $contentType;
 	}
 	public function getStatusCode(){
 		return $this->statusCode;
