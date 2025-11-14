@@ -8,11 +8,11 @@ class CrawlerHttpTest extends CrawlerTestType{
 		'host'=> 'macn.me',
 		'scheme'=> 'https',
 	];
-	// protected array $crawlPaths = ['/'];
-	// protected array $expect = [
-		// '/'=> [
-			// 'contentType'=> 'text/html',
-			// 'status'=> 200,
-		// ],
-	// ];
+	protected array $crawlPaths = ['/'];
+	protected array $expect = [
+		'/'=> [
+			'contentType'=> 'text/html',
+			'status'=> 200,
+		],
+	];
 }
