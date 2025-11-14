@@ -6,7 +6,7 @@ class Response{
 	protected ?string $contentType = null;
 	public array $headers = [];
 	protected int $statusCode;
-	public function __construct(string $content = null, int $status = 200, $headers = null){
+	public function __construct(?string $content = null, int $status = 200, $headers = null){
 		$this->content = $content;
 		$this->statusCode = $status;
 		if(is_array($headers)){

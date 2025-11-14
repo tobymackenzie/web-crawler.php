@@ -38,7 +38,7 @@ class Crawler{
 	}
 
 	//==crawl
-	public function crawl(array $paths = null, array $opts = [], $callback = null){
+	public function crawl(?array $paths = null, array $opts = [], $callback = null){
 		if($paths){
 			foreach($paths as $path){
 				$this->crawlPath($path, $callback);
@@ -49,7 +49,7 @@ class Crawler{
 			$this->crawlUnvisited($callback);
 		}
 	}
-	protected function crawlPath(string $path, callable $callback = null){
+	protected function crawlPath(string $path, ?callable $callback = null){
 		//--create response
 		$path = $this->normalizePath($path);
 		$response = $this->makeRequest($path);
@@ -197,7 +197,7 @@ class Crawler{
 		$char1 = substr($path, 0, 1);
 		return !isset($url['host']) && isset($url['path']) && $char1 !== '/' && $char1 !== '#';
 	}
-	protected function normalizePath(string $path, string $parentPath = null){
+	protected function normalizePath(string $path, ?string $parentPath = null){
 		//-! should resolve ".." parts
 		if($this->isPathRelativePath($path)){
 			$path = $parentPath . '/' . $path;
