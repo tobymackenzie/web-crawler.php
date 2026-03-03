@@ -63,7 +63,9 @@ class Crawler{
 		}
 
 		//--crawl for more links
-		$this->crawlResponseContent($response, $path);
+		if($response){
+			$this->crawlResponseContent($response, $path);
+		}
 
 		//--remove from unvisited
 		$key = array_search($path, $this->unvisited, true);
