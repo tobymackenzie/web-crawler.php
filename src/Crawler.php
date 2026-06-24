@@ -63,7 +63,7 @@ class Crawler{
 		}
 
 		//--crawl for more links
-		if($response){
+		if($response && $this->follow){
 			$this->crawlResponseContent($response, $path);
 		}
 
