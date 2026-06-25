@@ -12,7 +12,15 @@ class Response{
 		if(is_array($headers)){
 			$this->headers = $headers;
 		}elseif(!empty($headers)){
-			$this->headers = explode("\r\n", trim($headers));
+			$this->headers = [];
+			foreach(explode("\r\n", trim($headers)) as $header){
+				$header = explode(':', $header, 2);
+				if(count($header) === 2){
+					$this->headers[$header[0]] = $header[1];
+				}else{
+					$this->headers[] = $header[0];
+				}
+			}
 		}
 	}
 	public function getContent(){
