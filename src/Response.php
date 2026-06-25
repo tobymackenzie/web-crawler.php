@@ -16,7 +16,7 @@ class Response{
 			foreach(explode("\r\n", trim($headers)) as $header){
 				$header = explode(':', $header, 2);
 				if(count($header) === 2){
-					$this->headers[$header[0]] = $header[1];
+					$this->headers[trim($header[0])] = trim($header[1]);
 				}else{
 					$this->headers[] = $header[0];
 				}
